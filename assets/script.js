@@ -1,5 +1,6 @@
 const numericButtons = document.querySelectorAll(".numeric");
 const operatorButtons = document.querySelectorAll(".operator");
+const toggleButton = document.getElementById("buttontoggle");
 const displayScreen = document.getElementById("screenBoard");
 const upperDisplay = document.getElementById("screenExpression");
 const equals = document.getElementById("equalsbutton");
@@ -9,6 +10,19 @@ let operator = "";
 let operand2 = "";
 let isOperatorUsed = 0;
 let result = 0;
+let div = "\u00F7";
+
+function additiveInverse() {
+  operand1 = -operand1;
+  console.log(`operand1 is now ${operand1}`);
+  displayScreen.textContent = operand1;
+  operator = "";
+  operand2 = "";
+}
+
+function modulo(operand1, operand2) {
+  return operand1 % operand2;
+}
 
 function add(operand1, operand2) {
   return operand1 + operand2;
@@ -31,10 +45,12 @@ function operate(operator, operand1, operand2) {
     return add(operand1, operand2);
   } else if (operator === "-") {
     return subtract(operand1, operand2);
-  } else if (operator === "*") {
+  } else if (operator === "x") {
     return multiply(operand1, operand2);
-  } else if (operator === "/") {
+  } else if (operator === div) {
     return divide(operand1, operand2);
+  } else if (operator === "%") {
+    return modulo(operand1, operand2);
   }
 }
 
@@ -47,11 +63,19 @@ function clear() {
 }
 
 function evaluate() {
-  result = operate(operator, operand1, operand2);
-  operand1 = result;
-  operator = "";
-  operand2 = "";
-  displayScreen.textContent = result;
+  if (operand1 === "" || operand2 === "") {
+    //result = operate(operator, operand1, operand2);
+    operand1 = "";
+    operator = "";
+    operand2 = "";
+    displayScreen.textContent = "";
+  } else {
+    result = operate(operator, operand1, operand2);
+    operand1 = result;
+    operator = "";
+    operand2 = "";
+    displayScreen.textContent = result;
+  }
 }
 
 numericButtons.forEach(function (number) {
@@ -74,6 +98,9 @@ operatorButtons.forEach(function (Operator) {
     console.log(`${Operator.dataset.value}`);
     if (operand1 === "") {
       console.log("need Operand first");
+    } else if (Operator.dataset.value === "t") {
+      console.log("modulo");
+      additiveInverse(operand1);
     } else {
       displayScreen.textContent += `${Operator.dataset.value}`;
       operator = Operator.dataset.value;
@@ -81,6 +108,8 @@ operatorButtons.forEach(function (Operator) {
     }
   });
 });
+
+
 
 equals.addEventListener("click", evaluate);
 

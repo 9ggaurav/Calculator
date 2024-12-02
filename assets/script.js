@@ -7,12 +7,15 @@ const displayScreen = document.getElementById("screenBoard");
 const upperDisplay = document.getElementById("screenExpression");
 const equals = document.getElementById("equalsbutton");
 const clearScreen = document.getElementById("buttonClear");
+const dotButton=document.getElementById("buttonDot")
 let operand1 = "";
 let operator = "";
 let operand2 = "";
 let isOperatorUsed = 0;
 let result = 0;
 let div = "\u00F7";
+
+
 
 function additiveInverse() {
   operand1 = -operand1;
@@ -85,15 +88,25 @@ function evaluate() {
 
 numericButtons.forEach(function (number) {
   number.addEventListener("click", function () {
-    console.log(`${number.dataset.value}`);
-    if (isOperatorUsed === 0) {
-      operand1 += number.dataset.value;
-      displayScreen.textContent += number.dataset.value;
-      operand1 = parseFloat(operand1);
-    } else if (isOperatorUsed != 0) {
-      operand2 += number.dataset.value;
-      displayScreen.textContent += number.dataset.value;
-      operand2 = parseFloat(operand2);
+    if (number.dataset.value === ".") {
+      if (isOperatorUsed === 0 && !operand1.toString().includes(".")) {
+        operand1 += number.dataset.value;
+        displayScreen.textContent += number.dataset.value; 
+      }
+      else if (isOperatorUsed !== 0 && !operand2.toString().includes(".")) {
+        operand2 += number.dataset.value;
+        displayScreen.textContent += number.dataset.value; 
+      }
+    } else {
+      if (isOperatorUsed === 0) {
+        operand1 += number.dataset.value;
+        displayScreen.textContent += number.dataset.value;
+        operand1 = parseFloat(operand1); 
+      } else {
+        operand2 += number.dataset.value;
+        displayScreen.textContent += number.dataset.value;
+        operand2 = parseFloat(operand2);
+      }
     }
   });
 });
@@ -108,14 +121,13 @@ operatorButtons.forEach(function (Operator) {
     } else if (Operator.dataset.value === "t") {
       console.log("modulo");
       additiveInverse(operand1);
-    } else if (operand1 != "" && operand2 != "" && operator!="") {
+    } else if (operand1 != "" && operand2 != "" && operator != "") {
       operand1 = operate(operator, operand1, operand2);
-      operand2="";
+      operand2 = "";
       operator = Operator.dataset.value;
-      displayScreen.textContent=`${operand1}`;
+      displayScreen.textContent = `${operand1}`;
       displayScreen.textContent += `${operator}`;
-      isOperatorUsed=1;
-      // evaluate();
+      isOperatorUsed = 1;
     } else if (isOperatorUsed === 0) {
       displayScreen.textContent += `${Operator.dataset.value}`;
       operator = Operator.dataset.value;

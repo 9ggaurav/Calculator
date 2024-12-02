@@ -8,12 +8,13 @@ const clearScreen = document.getElementById("buttonClear");
 let operand1 = "";
 let operator = "";
 let operand2 = "";
-let isOperatorUsed = 0;
+let isOperatorUsed = false;
 let result = 0;
 let div = "\u00F7";
 
 function additiveInverse() {
   operand1 = -operand1;
+  isOperatorUsed=false;
   console.log(`operand1 is now ${operand1}`);
   displayScreen.textContent = operand1;
   operator = "";
@@ -69,12 +70,14 @@ function evaluate() {
     operator = "";
     operand2 = "";
     displayScreen.textContent = "";
+    isOperatorUsed=false;
   } else {
     result = operate(operator, operand1, operand2);
     operand1 = result;
     operator = "";
     operand2 = "";
     displayScreen.textContent = result;
+    isOperatorUsed=false;
   }
 }
 
@@ -93,6 +96,22 @@ numericButtons.forEach(function (number) {
   });
 });
 
+// operatorButtons.forEach(function (Operator) {
+//   Operator.addEventListener("click", function () {
+//     console.log(`${Operator.dataset.value}`);
+//     if (operand1 === "") {
+//       console.log("need Operand first");
+//     } else if (Operator.dataset.value === "t") {
+//       console.log("modulo");
+//       additiveInverse(operand1);
+//     } else {
+//       displayScreen.textContent += `${Operator.dataset.value}`;
+//       operator = Operator.dataset.value;
+//       isOperatorUsed++;
+//     }
+//   });
+// });
+
 operatorButtons.forEach(function (Operator) {
   Operator.addEventListener("click", function () {
     console.log(`${Operator.dataset.value}`);
@@ -101,15 +120,17 @@ operatorButtons.forEach(function (Operator) {
     } else if (Operator.dataset.value === "t") {
       console.log("modulo");
       additiveInverse(operand1);
+    } else if (isOperatorUsed) {
+      operator=Operator.dataset.value;
+      displayScreen.textContent=`${Operator.dataset.value}`
+      evaluate();
     } else {
       displayScreen.textContent += `${Operator.dataset.value}`;
       operator = Operator.dataset.value;
-      isOperatorUsed++;
+      isOperatorUsed=!isOperatorUsed;
     }
   });
 });
-
-
 
 equals.addEventListener("click", evaluate);
 
